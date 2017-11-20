@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package probuff;
+
+// Add a message for each data structure to serialise
+message Person {
+  // Specify a name and a type for each field in the message
+  // The " = 1", " = 2" markers on each element identify the unique "tag"
+  // that field uses in the binary encoding
+  // If a field value isn't set, a default value is used: 0, "", false etc.
+  string name = 1;
+  int32 id = 2; // Unique ID number for this person
+  string email = 3;
+
+  // Define enum types if a field should have one of a predefined list of values
+  enum PhoneType {
+    MOBILE = 0;
+    HOME = 1;
+    WORK = 2;
+  }
+
+  // It is possible to define message types nested inside other messages
+  message PhoneNumber {
+    string number = 1;
+    PhoneType type = 2;
+  }
+
+  // Other message types can be used as field types
+  // Person message contains PhoneNumber messages
+  // If a field is `repeated`, the field may be repeated any number of times
+  // `repeated` fields are similar to dynamically sized arrays
+  repeated PhoneNumber phones = 4;
+}
+
+// Our address book file is just one of these
+message AddressBook {
+  // AddressBook message contains Person messages
+  repeated Person people = 1;
+}
